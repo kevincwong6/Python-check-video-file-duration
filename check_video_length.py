@@ -27,8 +27,9 @@ def check_video_file_length(file, cnt=0):
     cnt_str = ''
     if cnt:
         cnt_str = str(cnt) + ') '
-    print(cnt_str + 'Processing ' + file)
+    print(cnt_str + 'Processing file : "' + file + '"')
 
+    cnt += 1
     try:
         video = moviepy.editor.VideoFileClip(file)
         # Contains the duration of the video in terms of seconds
@@ -36,13 +37,19 @@ def check_video_file_length(file, cnt=0):
         video.close()
     except:
         ex = sys.exc_info()[0]
-        err_msg = "Error: failed to process %s to write (%s)." % (file, ex)
-        print(err_msg)
-        sys.exit(1)   
-    cnt += 1     
+        print('Error: failed to process "%s" (%s).' % (file, ex))
+        query = input("\nDo you want to continue (y/n) ? (y)")
+        ans = query.lower() 
+          
+        print('')  
+        if ans == 'n':
+            print('EXITING.........\n')
+            sys.exit(1)   
+        else:
+            return    
 
     hrs, mins, secs = convert(video_duration)
-    print(str(hrs).zfill(2)+':'+str(mins).zfill(2)+':'+str(secs).zfill(2) + '\n')
+    print("Video Duration : " + str(hrs).zfill(2)+':'+str(mins).zfill(2)+':'+str(secs).zfill(2) + '\n')
 
 
 def check_all_files(path, extension='.mp4'):
